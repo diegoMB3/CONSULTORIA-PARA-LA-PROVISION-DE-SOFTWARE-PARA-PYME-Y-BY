@@ -1,0 +1,17 @@
+# Archivos de sistema operativo (basura)
+.DS_Store
+Thumbs.db
+
+# Dependencias y compilados (nunca se suben, se instalan)
+node_modules/
+vendor/
+__pycache__/
+bin/
+obj/
+
+# Archivos de entorno y SECRETOS (CRÍTICO PARA LA CLASE)
+# Jamás subir claves API o contraseñas a Git
+.env
+config.json
+secrets.xml
+*.log
