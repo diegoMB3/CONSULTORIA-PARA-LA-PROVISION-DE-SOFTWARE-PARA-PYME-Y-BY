@@ -1,0 +1,3 @@
+# 1. Introduccion y contexto
+Tomando en cuenta las entradas las fuentes complementarias y las guías del ejemplo de requerimientos , realiza la especificación de requerimientos realizado la priorización  moscow y en el formato IEEE 830 y considerando el uso de DevOps.
+Esta Especificación de Requerimientos de Software (SRS) para la plataforma virtual de digitalización del proceso crediticio Pyme y Banca Empresa (BE) del Banco de Desarrollo Productivo (BDP S.A.M.) ha sido elaborada siguiendo el estándar IEEE 830, aplicando la metodología de priorización MoSCoW e integrando prácticas de DevOps para su ciclo de vida.
