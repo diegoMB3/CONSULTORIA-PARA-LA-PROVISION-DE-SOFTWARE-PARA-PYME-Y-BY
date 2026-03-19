@@ -1,5 +1,4 @@
 # Digitalizacion del proceso Crediticio PYME y Banca Empresa (BE)
-# Consultoría para la Provisión de Software - PyME y BDP
 
 ![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-yellow)
 
