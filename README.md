@@ -1,6 +1,6 @@
 # Digitalizacion del proceso Crediticio PYME y Banca Empresa (BE)
 
-![Estado del Proyecto](https://img.shields.io/badge/Estado-En_Desarrollo-yellow)
+![Estado del Proyecto](https://img.shields.io/badge/Estado-Ultimando_Detalles-yellow)
 
 Este repositorio contiene la documentación técnica y estratégica para la implementación de una solución de software orientada a la gestión financiera de PyMEs, diseñada específicamente para el **Banco de Desarrollo Productivo (BDP)**.
 
