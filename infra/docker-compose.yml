@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  # 1. Base de Datos Principal (Guarda los "Eventos" - Exigencia Event Sourcing)
+  postgres_bdp:
+    image: postgres:15-alpine
+    container_name: bdp_database
+    environment:
+      POSTGRES_DB: bdp_credit_db
+      POSTGRES_USER: bdp_admin
+      POSTGRES_PASSWORD: Bdp2024Secure!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - bdp_net
+
+  # 2. Axon Server (El Router de Comandos y Eventos - CQRS Profesional)
+  axonserver:
+    image: axoniq/axonserver:latest
+    container_name: bdp_axon_server
+    ports:
+      - "8024:8024" # Interfaz Web de control (http://localhost:8024)
+      - "8124:8124" # Puerto para comandos/eventos
+    volumes:
+      - axon_data:/data
+    networks:
+      - bdp_net
+
+  # 3. Simulador del CORE Bancario (Mock API)
+  core_simulator:
+    image: wiremock/wiremock:latest
+    container_name: bdp_core_mock
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./wiremock:/home/wiremock
+    networks:
+      - bdp_net
+
+networks:
+  bdp_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  axon_data:
