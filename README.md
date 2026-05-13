@@ -17,4 +17,7 @@ Toda la documentación detallada se encuentra en la carpeta [`/docs`](./docs/):
 2.  **[Introducción](./docs/01_Introduccion_y_Contexto.md):** Justificación y alcance.
 3.  **[Requerimientos Funcionales](./docs/02_Requerimientos_Funcionales.md):** Historias de usuario y procesos.
 4.  **[Requerimientos No Funcionales](./docs/03_Requerimientos_No_Funcionales_DevOps.md):** Atributos de calidad y DevOps.
+5.  **[Mockups](./docs/04_Mockups.md)
+6.  **[Diagramas](./docs/06_Diagramas/)
+7.  **[Cronograma](./docs/07_Cronograma.jpeg)
 ## Equipo del Proyecto Gestor del Proyecto: Diego Méndez . Líder de Desarrollo: Leonardo Radek Condori Yucra . Ingenieros de Software: Juan Daniel Ancieta Toledo, Christian Fabian Gonzales Mamani, Maializ Mamani Quispe .
