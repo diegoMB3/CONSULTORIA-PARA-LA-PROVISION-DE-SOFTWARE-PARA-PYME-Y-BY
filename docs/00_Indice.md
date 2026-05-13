@@ -19,6 +19,17 @@ Bienvenido al índice centralizado del proyecto de consultoría. Haz clic en los
 * **Disponibilidad:** Alta disponibilidad y backups (RNF-04).
 * **Modo Offline:** Continuidad operativa en zonas sin cobertura (RNF-07).
 
-### 5. [05 - Diagramas](./05_Diagramas)
+### 4. [04 - Mockups](./04_Mockups.md)
+
+### 5. [05 - Arquitectura](./05_Arquitectura.md)
+
+### 6. [06 - Diagramas]
+### [01 - DiagramaUML](./06_Diagramas/01_DiagramaUML.svg)
+### [02 - Diagrama Casos de Uso](./06_Diagramas/02_Diagrama_CasoDeUso.svg)
+### [03 - Diagrama de Estados](./06_Diagramas/03_Diagrama_de_Estado.svg)
+### [04 - Diagrama de Actividades](./06_Diagramas/04_Diagrama_de_Actividades.jpeg)
+### [05 - Diagrama de Comunicasion](./06_Diagramas/05_Diagrama_de_Comunicación.svg)
+
+### 7. [Cronograma](./07_Cronograma.jpeg)
 ---
 [⬅️ Volver al Inicio del Repositorio](../README.md)
