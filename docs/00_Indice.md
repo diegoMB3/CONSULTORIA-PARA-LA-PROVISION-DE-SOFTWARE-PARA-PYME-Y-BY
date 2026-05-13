@@ -19,5 +19,6 @@ Bienvenido al índice centralizado del proyecto de consultoría. Haz clic en los
 * **Disponibilidad:** Alta disponibilidad y backups (RNF-04).
 * **Modo Offline:** Continuidad operativa en zonas sin cobertura (RNF-07).
 
+### 5. [05 - Diagramas](./05_Diagramas)
 ---
 [⬅️ Volver al Inicio del Repositorio](../README.md)
