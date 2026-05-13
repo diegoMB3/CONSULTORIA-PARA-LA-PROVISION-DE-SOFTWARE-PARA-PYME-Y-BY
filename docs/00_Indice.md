@@ -30,6 +30,6 @@ Bienvenido al índice centralizado del proyecto de consultoría. Haz clic en los
 ### [04 - Diagrama de Actividades](./06_Diagramas/04_Diagrama_de_Actividades.jpeg)
 ### [05 - Diagrama de Comunicasion](./06_Diagramas/05_Diagrama_de_Comunicación.svg)
 
-### 7. [Cronograma](./07_Cronograma.jpeg)
+### 7. [07 - Cronograma](./07_Cronograma.jpeg)
 ---
 [⬅️ Volver al Inicio del Repositorio](../README.md)
