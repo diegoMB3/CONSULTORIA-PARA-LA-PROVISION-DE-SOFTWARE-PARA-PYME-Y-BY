@@ -4,6 +4,7 @@ import RegistroCliente from './pages/RegistroCliente';
 import ChecklistDocumentos from './pages/ChecklistDocumentos';
 import EvaluacionCliente from './pages/EvaluacionCliente';
 import VolteoBalances from './pages/VolteoBalances';
+import IndicadoresFinancieros from './pages/IndicadoresFinancieros';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
 // Tema personalizado con colores del BDP (RNF-05)
@@ -32,6 +33,7 @@ function App() {
           <Route path="/checklist/:clienteId" element={<ChecklistDocumentos />} />
           <Route path="/evaluacion/:clienteId" element={<EvaluacionCliente />} />
           <Route path="/volteo-balances/:clienteId?" element={<VolteoBalances />} />
+          <Route path="/indicadores/:clienteId" element={<IndicadoresFinancieros />} />
           {/* Futuras rutas: /agricola, etc. */}
         </Routes>
       </Router>
