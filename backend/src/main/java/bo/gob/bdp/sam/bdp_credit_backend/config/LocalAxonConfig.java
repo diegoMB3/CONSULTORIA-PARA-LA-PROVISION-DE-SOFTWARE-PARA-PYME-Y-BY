@@ -1,4 +1,4 @@
-﻿package bo.gob.bdp.sam.bdp_credit_backend.config;
+package bo.gob.bdp.sam.bdp_credit_backend.config;
 
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.Proxy;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Configuration
@@ -20,12 +21,16 @@ public class LocalAxonConfig {
                 new Class[]{CommandGateway.class},
                 (proxy, method, args) -> {
                     Class<?> rt = method.getReturnType();
+                    
+                    // Si espera un proceso asíncrono, devolvemos un ID falso asíncrono
                     if (CompletableFuture.class.isAssignableFrom(rt)) {
-                        return CompletableFuture.completedFuture(null);
+                        return CompletableFuture.completedFuture(UUID.randomUUID().toString());
                     }
+                    // Si no espera nada
                     if (rt.equals(void.class)) {
                         return null;
                     }
+                    // Si espera tipos primitivos
                     if (rt.isPrimitive()) {
                         if (rt.equals(boolean.class)) return false;
                         if (rt.equals(byte.class)) return (byte) 0;
@@ -36,6 +41,12 @@ public class LocalAxonConfig {
                         if (rt.equals(double.class)) return 0d;
                         if (rt.equals(char.class)) return '\u0000';
                     }
+                    
+                    // LA MAGIA AQUÍ: Si espera un Object (como sendAndWait) o un String, devolvemos un ID falso
+                    if (rt.equals(Object.class) || rt.equals(String.class)) {
+                        return UUID.randomUUID().toString();
+                    }
+                    
                     return null;
                 }
         );
