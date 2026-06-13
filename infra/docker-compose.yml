@@ -1,6 +1,5 @@
-version: '3.8'
 services:
-  # 1. Base de Datos Principal (Guarda los "Eventos" - Exigencia Event Sourcing)
+  # 1. Base de Datos Principal
   postgres_bdp:
     image: postgres:15-alpine
     container_name: bdp_database
@@ -14,27 +13,61 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - bdp_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bdp_admin -d bdp_credit_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # 2. Axon Server (El Router de Comandos y Eventos - CQRS Profesional)
+  # 2. Axon Server (disponible para futuras integraciones; el backend no depende de el)
   axonserver:
-    image: axoniq/axonserver:latest
+    image: axoniq/axonserver:2024.2.1
     container_name: bdp_axon_server
+    environment:
+      - AXONIQ_AXONSERVER_STANDALONE=true
     ports:
-      - "8024:8024" # Interfaz Web de control (http://localhost:8024)
-      - "8124:8124" # Puerto para comandos/eventos
+      - "8024:8024"
+      - "8124:8124"
     volumes:
       - axon_data:/data
     networks:
       - bdp_net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8024/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
-  # 3. Simulador del CORE Bancario (Mock API)
+  # 3. Simulador del CORE Bancario
   core_simulator:
-    image: wiremock/wiremock:latest
+    image: wiremock/wiremock:3.10.0
     container_name: bdp_core_mock
     ports:
       - "8081:8080"
     volumes:
       - ./wiremock:/home/wiremock
+    networks:
+      - bdp_net
+
+  # 4. BACKEND - Spring Boot Application
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: bdp_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres_bdp:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_bdp:5432/bdp_credit_db
+      - SPRING_DATASOURCE_USERNAME=bdp_admin
+      - SPRING_DATASOURCE_PASSWORD=Bdp2024Secure!
+      - AXON_AXONSERVER_ENABLED=false
+      - SPRING_AUTOCONFIGURE_EXCLUDE=org.axonframework.spring.config.AxonAutoConfiguration
     networks:
       - bdp_net
 
