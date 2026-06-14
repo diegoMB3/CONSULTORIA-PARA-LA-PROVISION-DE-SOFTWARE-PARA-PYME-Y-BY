@@ -5,13 +5,10 @@ import ChecklistDocumentos from './pages/ChecklistDocumentos';
 import EvaluacionCliente from './pages/EvaluacionCliente';
 import VolteoBalances from './pages/VolteoBalances';
 import IndicadoresFinancieros from './pages/IndicadoresFinancieros';
-<<<<<<< Updated upstream
 import EvaluacionAgricola from './pages/EvaluacionAgricola';
 import EvaluacionPecuaria from './pages/EvaluacionPecuaria';
 import SimuladorPagos from './pages/SimuladorPagos';
-=======
 import { EvaluacionProduccion } from './pages/EvaluacionProduccion';
->>>>>>> Stashed changes
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
 // Tema personalizado con colores del BDP (RNF-05)

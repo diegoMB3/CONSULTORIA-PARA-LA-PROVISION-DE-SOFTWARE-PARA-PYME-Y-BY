@@ -1,5 +1,6 @@
 package bo.gob.bdp.sam.adapters.in.web;
 
+import bo.gob.bdp.sam.core.application.command.ActualizarBalanceCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -53,7 +53,7 @@ public class BalanceControllerTest {
 
     @Test
     void actualizarBalance_retornara_objeto_con_info_y_balanceActualizado() throws Exception {
-        when(commandGateway.send(any())).thenReturn(CompletableFuture.completedFuture("ok"));
+        when(commandGateway.send(any(ActualizarBalanceCommand.class))).thenReturn(CompletableFuture.completedFuture("ok"));
 
         java.util.Map<String, Double> cuentas = new java.util.LinkedHashMap<>();
         cuentas.put("CAJA_BANCOS", 100.0);
@@ -90,7 +90,7 @@ public class BalanceControllerTest {
 
     @Test
     void validarBalanceFinal_retornara_mensaje_aprobado_al_confirmar() throws Exception {
-        when(commandGateway.send(any())).thenReturn(CompletableFuture.completedFuture("ok"));
+        when(commandGateway.send(any(ActualizarBalanceCommand.class))).thenReturn(CompletableFuture.completedFuture("ok"));
 
         java.util.Map<String, Double> cuentas = new java.util.LinkedHashMap<>();
         cuentas.put("CAJA_BANCOS", 0.0);

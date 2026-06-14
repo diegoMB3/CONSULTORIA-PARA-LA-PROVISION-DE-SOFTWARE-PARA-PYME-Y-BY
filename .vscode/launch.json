@@ -1,0 +1,15 @@
+{
+    "configurations": [
+
+        {
+            "type": "java",
+            "name": "Spring Boot-BdpCreditBackendApplication<bdp-credit-backend>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "bo.gob.bdp.sam.bdp_credit_backend.BdpCreditBackendApplication",
+            "projectName": "bdp-credit-backend",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
