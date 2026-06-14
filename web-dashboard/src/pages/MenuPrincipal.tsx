@@ -34,8 +34,19 @@ const MenuPrincipal: React.FC = () => {
     }, []);
 
     const handleSeleccionarModelo = (nombre: string) => {
+        if (nombre.includes('Agrícola')) {
+            navigate('/evaluacion-agricola/1234567');
+            return;
+        }
+        if (nombre.includes('Pecuaria')) {
+            navigate('/evaluacion-pecuaria/1234567');
+            return;
+        }
+        if (nombre.includes('Volteo')) {
+            navigate('/volteo-balances/1234567');
+            return;
+        }
         alert(`Flujo de trabajo: Redirigiendo a ${nombre} (RF-XX)`);
-        // Aquí iría la navegación: navigate('/agricola');
     };
 
     return (

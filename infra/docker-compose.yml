@@ -71,6 +71,24 @@ services:
     networks:
       - bdp_net
 
+  pgadmin:
+    image: dpage/pgadmin4:8.4
+    container_name: bdp_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bdp.com.bo
+      PGADMIN_DEFAULT_PASSWORD: Bdp2024Secure!
+      # Desactivar advertencias de seguridad en entorno local de desarrollo
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10
+    ports:
+      - "5050:80"
+    networks:
+      - bdp_net
+    depends_on:
+      - postgres_bdp
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
 networks:
   bdp_net:
     driver: bridge
@@ -78,3 +96,4 @@ networks:
 volumes:
   postgres_data:
   axon_data:
+  pgadmin_data:
