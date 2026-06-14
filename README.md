@@ -1,6 +1,6 @@
 # Digitalizacion del proceso Crediticio PYME y Banca Empresa (BE)
 
-![Estado del Proyecto](https://img.shields.io/badge/Estado-Ultimando_Detalles-yellow)
+![Estado del Proyecto](https://img.shields.io/badge/Estado-Finalizado-yellow)
 
 Este repositorio contiene la documentación técnica y estratégica para la implementación de una solución de software orientada a la gestión financiera de PyMEs, diseñada específicamente para el **Banco de Desarrollo Productivo (BDP)**.
 
@@ -20,4 +20,12 @@ Toda la documentación detallada se encuentra en la carpeta [`/docs`](./docs/):
 5.  **[Mockups](./docs/04_Mockups.md):** Prototipos visuales de alta fidelidad que definen la interfaz de usuario (UI) y la experiencia de navegación (UX) antes del desarrollo.
 6.  **[Diagramas](./docs/06_Diagramas/):** Modelado técnico del sistema mediante diagramas UML (Clases, Casos de Uso, Estados y Comunicación) para visualizar la arquitectura y el flujo lógico.
 7.  **[Cronograma](./docs/07_Cronograma.jpeg):** Planificación temporal del proyecto detallando las fases de consultoría, hitos clave y fechas estimadas de entrega.
-## Equipo del Proyecto Gestor del Proyecto: Diego Méndez . Líder de Desarrollo: Leonardo Radek Condori Yucra . Ingenieros de Software: Juan Daniel Ancieta Toledo, Christian Fabian Gonzales Mamani, Maializ Mamani Quispe .
+8.  **[Documentacion_final](./docs/08_Documentacion_final)**
+
+9.  **[Productos](./productos)**
+## Equipo del Proyecto Gestor del Proyecto: Diego Méndez Benites
+## Líder de Desarrollo: Leonardo Radek Condori Yucra 
+## Ingenieros de Software: 
+##  Juan Daniel Ancieta Toledo
+##  Christian Fabian Gonzales Mamani
+##  Marializ Mamani Quispe .
