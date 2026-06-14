@@ -23,6 +23,7 @@ services:
   axonserver:
     image: axoniq/axonserver:2024.2.1
     container_name: bdp_axon_server
+    hostname: axonserver
     environment:
       - AXONIQ_AXONSERVER_STANDALONE=true
     ports:
