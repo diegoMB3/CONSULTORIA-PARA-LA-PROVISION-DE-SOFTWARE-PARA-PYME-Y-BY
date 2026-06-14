@@ -34,6 +34,7 @@ const MenuPrincipal: React.FC = () => {
     }, []);
 
     const handleSeleccionarModelo = (nombre: string) => {
+<<<<<<< Updated upstream
         if (nombre.includes('Agrícola')) {
             navigate('/evaluacion-agricola/1234567');
             return;
@@ -47,6 +48,15 @@ const MenuPrincipal: React.FC = () => {
             return;
         }
         alert(`Flujo de trabajo: Redirigiendo a ${nombre} (RF-XX)`);
+=======
+        // Evaluamos el nombre que viene del backend para decidir la navegación real
+        if (nombre.includes('Producción') || nombre.includes('RF-06.1')) {
+            navigate('/evaluacion-produccion');
+        } else {
+            // Alerta temporal para los rubros que aún no se han implementado
+            alert(`Flujo de trabajo: Redirigiendo a ${nombre} (En Desarrollo)`);
+        }
+>>>>>>> Stashed changes
     };
 
     return (
