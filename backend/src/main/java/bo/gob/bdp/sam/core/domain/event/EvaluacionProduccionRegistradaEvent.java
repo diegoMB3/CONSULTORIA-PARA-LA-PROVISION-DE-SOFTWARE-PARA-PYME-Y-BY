@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EvaluacionProduccionRegistradaEvent {
-    
+    private String evaluacionId;
     private String clienteId;
-    private double ingresosVentas;
-    private double costosFijos;
+    private double ingresos;
     private double costosVariables;
+    private double costosFijos;
     private double utilidadNeta;
     private double margenUtilidad;
 }

@@ -43,7 +43,7 @@ const MenuPrincipal: React.FC = () => {
             return;
         }
         if (nombre.includes('Producción') || nombre.includes('RF-06.1')) {
-            navigate('/evaluacion-produccion');
+            navigate('/evaluacion-produccion/1234567');
             return;
         }
         if (nombre.includes('Volteo')) {

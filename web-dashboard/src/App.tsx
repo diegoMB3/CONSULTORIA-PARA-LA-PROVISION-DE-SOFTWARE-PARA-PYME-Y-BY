@@ -32,7 +32,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/evaluacion-produccion" element={<EvaluacionProduccion />} />
+          <Route path="/evaluacion-produccion/:clienteId?" element={<EvaluacionProduccion />} />
           <Route path="/" element={<MenuPrincipal />} />
           <Route path="/registro-cliente" element={<RegistroCliente />} />
           <Route path="/checklist/:clienteId" element={<ChecklistDocumentos />} />

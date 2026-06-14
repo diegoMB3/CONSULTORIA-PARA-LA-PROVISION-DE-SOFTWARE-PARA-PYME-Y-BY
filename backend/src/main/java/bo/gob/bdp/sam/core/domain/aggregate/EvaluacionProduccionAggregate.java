@@ -4,54 +4,63 @@ import bo.gob.bdp.sam.core.application.command.RegistrarEvaluacionProduccionComm
 import bo.gob.bdp.sam.core.domain.event.EvaluacionProduccionRegistradaEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.modelling.command.AggregateCreationPolicy;
 import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.modelling.command.CreationPolicy;
 import org.axonframework.spring.stereotype.Aggregate;
+
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
-import lombok.NoArgsConstructor;
-
 @Aggregate
-@NoArgsConstructor
 public class EvaluacionProduccionAggregate {
 
     @AggregateIdentifier
     private String clienteId;
-    private double ingresosVentas;
-    private double costosFijos;
+    private String evaluacionId;
+    private double ingresos;
     private double costosVariables;
+    private double costosFijos;
     private double utilidadNeta;
     private double margenUtilidad;
 
+    protected EvaluacionProduccionAggregate() {
+        // Required by Axon for event sourcing reconstruction.
+    }
+
     @CommandHandler
-    public EvaluacionProduccionAggregate(RegistrarEvaluacionProduccionCommand cmd) {
+    @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
+    public void handle(RegistrarEvaluacionProduccionCommand cmd) {
         if (cmd.getClienteId() == null || cmd.getClienteId().trim().isEmpty()) {
-            throw new IllegalArgumentException("❌ Error: El código de cliente es obligatorio.");
+            throw new IllegalArgumentException("El cliente es obligatorio para registrar la evaluación de producción.");
         }
-        if (cmd.getIngresosVentas() <= 0) {
-            throw new IllegalArgumentException("❌ Error Industrial: Los ingresos de ventas deben ser mayores a cero.");
+        if (cmd.getIngresos() <= 0) {
+            throw new IllegalArgumentException("Los ingresos deben ser mayores que cero.");
         }
         if (cmd.getCostosFijos() < 0 || cmd.getCostosVariables() < 0) {
-            throw new IllegalArgumentException("❌ Error Financiero: Los costos no pueden ser valores negativos.");
+            throw new IllegalArgumentException("Los costos no pueden ser negativos.");
         }
 
-        double costosTotales = cmd.getCostosFijos() + cmd.getCostosVariables();
-        double calculoUtilidadNeta = cmd.getIngresosVentas() - costosTotales;
-        
+        double calculoUtilidadNeta = cmd.getIngresos() - (cmd.getCostosFijos() + cmd.getCostosVariables());
         if (calculoUtilidadNeta <= 0) {
-            throw new IllegalArgumentException("❌ Evaluación Denegada: La utilidad neta calculada es negativa o cero.");
+            throw new IllegalArgumentException("La utilidad neta calculada no puede ser negativa o cero.");
         }
 
-        double calculoMargen = (calculoUtilidadNeta / cmd.getIngresosVentas()) * 100;
-        
+        double calculoMargen = (calculoUtilidadNeta / cmd.getIngresos()) * 100;
         if (calculoMargen < 10.0) {
-            throw new IllegalArgumentException("❌ Riesgo de Operación: El margen de eficiencia industrial es inferior al 10% estipulado.");
+            throw new IllegalArgumentException("El margen de utilidad debe ser igual o mayor al 10%.");
+        }
+
+        String eventoId = cmd.getEvaluacionId();
+        if (eventoId == null || eventoId.isBlank()) {
+            eventoId = java.util.UUID.randomUUID().toString();
         }
 
         apply(new EvaluacionProduccionRegistradaEvent(
+                eventoId,
                 cmd.getClienteId(),
-                cmd.getIngresosVentas(),
-                cmd.getCostosFijos(),
+                cmd.getIngresos(),
                 cmd.getCostosVariables(),
+                cmd.getCostosFijos(),
                 calculoUtilidadNeta,
                 calculoMargen
         ));
@@ -60,9 +69,10 @@ public class EvaluacionProduccionAggregate {
     @EventSourcingHandler
     public void on(EvaluacionProduccionRegistradaEvent event) {
         this.clienteId = event.getClienteId();
-        this.ingresosVentas = event.getIngresosVentas();
-        this.costosFijos = event.getCostosFijos();
+        this.evaluacionId = event.getEvaluacionId();
+        this.ingresos = event.getIngresos();
         this.costosVariables = event.getCostosVariables();
+        this.costosFijos = event.getCostosFijos();
         this.utilidadNeta = event.getUtilidadNeta();
         this.margenUtilidad = event.getMargenUtilidad();
     }

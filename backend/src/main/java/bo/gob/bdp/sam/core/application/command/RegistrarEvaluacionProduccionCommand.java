@@ -11,19 +11,10 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 public class RegistrarEvaluacionProduccionCommand {
 
     @TargetAggregateIdentifier
-    private String evaluacionId;
-
     private String clienteId;
+
+    private String evaluacionId;
     private double ingresos;
     private double costosVariables;
     private double costosFijos;
-    private double utilidadNeta;
-
-    public double getIngresosVentas() {
-        return ingresos;
-    }
-
-    public void setIngresosVentas(double ingresosVentas) {
-        this.ingresos = ingresosVentas;
-    }
 }

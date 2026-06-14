@@ -1,6 +1,6 @@
 package bo.gob.bdp.sam.core.application.query;
 
-import bo.gob.bdp.sam.core.application.event.EvaluacionProduccionRegistradaEvent;
+import bo.gob.bdp.sam.core.domain.event.EvaluacionProduccionRegistradaEvent;
 import bo.gob.bdp.sam.adapters.out.persistence.EvaluacionProduccionEntity;
 import bo.gob.bdp.sam.adapters.out.persistence.EvaluacionProduccionRepository;
 import org.axonframework.eventhandling.EventHandler;

@@ -5,6 +5,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Data;
+
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,20 +17,27 @@ public class EvaluacionProduccionController {
 
     private final CommandGateway commandGateway;
 
-    @PostMapping
-    public CompletableFuture<String> registrarEvaluacion(@RequestBody EvaluacionProdRequest request) {
-        String uuid = UUID.randomUUID().toString();
-        
+    @PostMapping(value = {"", "/{clienteId}"})
+    public CompletableFuture<String> registrarEvaluacion(
+            @PathVariable(required = false) String clienteId,
+            @RequestBody EvaluacionProdRequest request) {
+
+        String resolvedClienteId = (clienteId != null && !clienteId.isBlank())
+                ? clienteId
+                : (request.getClienteId() != null && !request.getClienteId().isBlank())
+                ? request.getClienteId()
+                : "CLIENTE-ANONIMO";
+
+        String evaluacionId = UUID.randomUUID().toString();
         RegistrarEvaluacionProduccionCommand command = new RegistrarEvaluacionProduccionCommand(
-                uuid,
-                request.getClienteId() != null ? request.getClienteId() : "CLIENTE-ANONIMO",
+                resolvedClienteId,
+                evaluacionId,
                 request.getIngresos(),
                 request.getCostosVariables(),
-                request.getCostosFijos(),
-                request.getUtilidadNeta()
+                request.getCostosFijos()
         );
 
-        return commandGateway.send(command);
+        return commandGateway.send(command).thenApply(result -> evaluacionId);
     }
 }
 
@@ -39,5 +47,4 @@ class EvaluacionProdRequest {
     private double ingresos;
     private double costosVariables;
     private double costosFijos;
-    private double utilidadNeta;
 }

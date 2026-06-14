@@ -1,37 +1,47 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 export const EvaluacionProduccion = () => {
-  // Estados para clasificar los costos según RF-06.1
+  const { clienteId } = useParams<{ clienteId?: string }>();
   const [ingresos, setIngresos] = useState<number>(0);
-  const [costosVariables, setCostosVariables] = useState({ materiaPrima: 0, insumos: 0 });
-  const [costosFijos, setCostosFijos] = useState({ alquiler: 0, sueldos: 0, servicios: 0 });
+  const [costosVariables, setCostosVariables] = useState<number>(0);
+  const [costosFijos, setCostosFijos] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Cálculos automáticos de eficiencia
-  const totalCostosVariables = costosVariables.materiaPrima + costosVariables.insumos;
-  const totalCostosFijos = costosFijos.alquiler + costosFijos.sueldos + serviciosTotales();
-  
-  function serviciosTotales() {
-    return costosFijos.servicios;
-  }
-  
-  const utilidadBruta = ingresos - totalCostosVariables;
-  const utilidadNeta = utilidadBruta - totalCostosFijos;
+  const resolvedClienteId = clienteId || 'CLIENTE-ANONIMO';
+  const utilidadNeta = useMemo(() => ingresos - costosVariables - costosFijos, [ingresos, costosVariables, costosFijos]);
+  const margenEfectivo = useMemo(
+    () => (ingresos > 0 ? Number(((utilidadNeta / ingresos) * 100).toFixed(2)) : 0),
+    [ingresos, utilidadNeta]
+  );
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
+    setError(null);
+    setMessage(null);
 
     const payload = {
-      clienteId: "CLIENTE-DEMO-001", // Reemplazar dinámicamente con el ID real del flujo de navegación
-      ingresos: ingresos,
-      costosVariables: totalCostosVariables,
-      costosFijos: totalCostosFijos,
-      utilidadNeta: utilidadNeta
+      clienteId: resolvedClienteId,
+      ingresos,
+      costosVariables,
+      costosFijos,
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/evaluacion-produccion', {
+      const response = await fetch(`http://localhost:8080/api/evaluacion-produccion/${resolvedClienteId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,97 +50,107 @@ export const EvaluacionProduccion = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error en el servidor: ${response.status}`);
+        const errorBody = await response.text();
+        throw new Error(errorBody || `Error en el servidor: ${response.status}`);
       }
 
-      const idGenerado = await response.text();
-      alert(`¡Evaluación guardada exitosamente en PostgreSQL!\nID de Transacción: ${idGenerado}\nUtilidad Neta: Bs ${utilidadNeta}`);
-    } catch (error) {
-      console.error("Error al guardar la evaluación:", error);
-      alert("Hubo un error al intentar conectarse con el servidor backend.");
+      const evaluacionId = await response.text();
+      setMessage(`Evaluación registrada correctamente. ID: ${evaluacionId}`);
+    } catch (fetchError: unknown) {
+      setError(
+        fetchError instanceof Error
+          ? fetchError.message
+          : 'Hubo un error al comunicarse con el servidor.'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl mt-8">
-      <h1 className="text-3xl font-bold text-blue-900 mb-6 border-b-2 border-blue-900 pb-2">
-        Evaluación de Producción (Industrial)
-      </h1>
-      
-      <form onSubmit={handleSave} className="space-y-6">
-        {/* 1. INGRESOS */}
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">1. Ingresos Mensuales Proyectados</h2>
-          <div>
-            <label className="block text-gray-700 font-medium">Ventas Totales (Bs)</label>
-            <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-blue-500" 
-                   value={ingresos} onChange={e => setIngresos(Number(e.target.value))} required disabled={loading} />
-          </div>
-        </div>
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Evaluación de Producción Industrial
+      </Typography>
+      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+        Cliente: {resolvedClienteId}
+      </Typography>
 
-        {/* 2. COSTOS VARIABLES */}
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-500">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">2. Costos Variables (Por Producción)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-700 font-medium">Materia Prima (Bs)</label>
-              <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-yellow-500" 
-                     value={costosVariables.materiaPrima} onChange={e => setCostosVariables({...costosVariables, materiaPrima: Number(e.target.value)})} required disabled={loading} />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium">Insumos (Bs)</label>
-              <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-yellow-500" 
-                     value={costosVariables.insumos} onChange={e => setCostosVariables({...costosVariables, insumos: Number(e.target.value)})} required disabled={loading} />
-            </div>
-          </div>
-        </div>
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+      {message && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {message}
+        </Alert>
+      )}
 
-        {/* 3. COSTOS FIJOS */}
-        <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-500">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">3. Costos Fijos (Operativos)</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-gray-700 font-medium">Alquiler (Bs)</label>
-              <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-red-500" 
-                     value={costosFijos.alquiler} onChange={e => setCostosFijos({...costosFijos, alquiler: Number(e.target.value)})} required disabled={loading} />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium">Sueldos (Bs)</label>
-              <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-red-500" 
-                     value={costosFijos.sueldos} onChange={e => setCostosFijos({...costosFijos, sueldos: Number(e.target.value)})} required disabled={loading} />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium">Servicios (Bs)</label>
-              <input type="number" className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-2 focus:ring-red-500" 
-                     value={costosFijos.servicios} onChange={e => setCostosFijos({...costosFijos, servicios: Number(e.target.value)})} required disabled={loading} />
-            </div>
-          </div>
-        </div>
+      <Box component="form" onSubmit={handleSave} noValidate>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant="h6">Ingresos proyectados</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Ingresos (Bs)"
+              type="number"
+              value={ingresos}
+              onChange={(event) => setIngresos(Number(event.target.value))}
+              required
+              disabled={loading}
+            />
+          </Grid>
 
-        {/* 4. INDICADORES AUTOMÁTICOS */}
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md border border-gray-200">
-          <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Indicadores de Eficiencia</h2>
-          <div className="flex flex-col md:flex-row justify-around text-lg">
-            <p><strong>Total C. Variables:</strong> Bs {totalCostosVariables}</p>
-            <p><strong>Total C. Fijos:</strong> Bs {totalCostosFijos}</p>
-            <p className={`font-bold ${utilidadNeta >= 0 ? 'text-green-700' : 'text-red-600'}`}>
-              <strong>Utilidad Neta:</strong> Bs {utilidadNeta}
-            </p>
-          </div>
-        </div>
+          <Grid item xs={12}>
+            <Typography variant="h6">Costos variables</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Costos variables (Bs)"
+              type="number"
+              value={costosVariables}
+              onChange={(event) => setCostosVariables(Number(event.target.value))}
+              required
+              disabled={loading}
+            />
+          </Grid>
 
-        <div className="text-right">
-          <button 
-            type="submit" 
-            disabled={loading}
-            className={`${loading ? 'bg-gray-500' : 'bg-blue-900 hover:bg-blue-800'} text-white px-8 py-3 rounded font-bold shadow-lg transition duration-200`}
-          >
-            {loading ? 'GUARDANDO...' : 'GUARDAR EVALUACIÓN'}
-          </button>
-        </div>
-      </form>
-    </div>
+          <Grid item xs={12}>
+            <Typography variant="h6">Costos fijos</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Costos fijos (Bs)"
+              type="number"
+              value={costosFijos}
+              onChange={(event) => setCostosFijos(Number(event.target.value))}
+              required
+              disabled={loading}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box sx={{ p: 3, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Resultados automáticos
+              </Typography>
+              <Typography>Utilidad neta: Bs {utilidadNeta.toFixed(2)}</Typography>
+              <Typography>Margen estimado: {margenEfectivo.toFixed(2)}%</Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Guardar evaluación'}
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 };
