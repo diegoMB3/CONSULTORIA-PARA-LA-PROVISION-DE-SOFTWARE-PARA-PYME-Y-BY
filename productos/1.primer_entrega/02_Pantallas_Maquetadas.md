@@ -1,3 +1,3 @@
 ## 🎨 COMPONENTE 2: PANTALLAS MAQUETADAS DE FORMULARIOS (DISEÑO DE INTERFACES)
 
-[text](https://stitch.withgoogle.com/preview/932751895002917609?node-id=bc5b7c5a898c46cbb8acde4672f4965a)
+[FORMULARIOS MAQUETADOS](https://stitch.withgoogle.com/preview/932751895002917609?node-id=bc5b7c5a898c46cbb8acde4672f4965a)
